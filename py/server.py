@@ -562,13 +562,11 @@ def load_env(state, eid, socket):
     """ load an environment to a client by socket """
 
     env = {}
-    if eid in state:
-        env = state.get(eid)
-    else:
-        p = os.path.join(FLAGS.env_path, eid.strip(), '.json')
-        if os.path.exists(p):
-            env = tornado.escape.json_decode(open(p, 'r').read())
-            state[eid] = env
+    # force load env from json
+    p = os.path.join(FLAGS.env_path, eid.strip(), '.json')
+    if os.path.exists(p):
+        env = tornado.escape.json_decode(open(p, 'r').read())
+        state[eid] = env
 
     if 'reload' in env:
         socket.write_message(
